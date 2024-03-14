@@ -1,13 +1,13 @@
 import * as React from 'react';
+import './reset.css';
 import './App.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Country } from './countries/models';
-library.add(faMoon);
+library.add(faMoon, faSearch);
 import { GetCountriesListService } from './countries/services';
 import { SearchCountriesByNameService } from './countries/services';
-import DropDown from './countries/views/components/dropdown';
 import { SearchCountriesByRegionService } from './countries/services/SearchCountriesByRegion.service';
 
 function App() {
@@ -18,7 +18,6 @@ function App() {
   const searchCountriesByNameService = new SearchCountriesByNameService();
   const searchCountriesByRegionService = new SearchCountriesByRegionService
 
-  const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
   const [selectRegion, setSelectRegion] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -36,76 +35,75 @@ function App() {
       const searchNameCountry = await searchCountriesByNameService.execute(search)
       setCountries(searchNameCountry)
       setSelectRegion('');
+      reloadRegionSelected('regionSelected', '')
     }
   }
 
-  const regions = () => {
-    return ['America', 'Asia', 'Africa', 'Oceania', 'Antarctic'];
-  };
-
-  const toggleDropDown = () => {
-    setShowDropDown(!showDropDown);
-  };
-
-  const dismissHandler = (event: React.FocusEvent<HTMLButtonElement>): void => {
-    if (event.currentTarget === event.target) {
-      setShowDropDown(false);
-    }
+  function reloadRegionSelected(id: string, valueToSelect: string) {
+    let elementToSelect = document.getElementById(id) as HTMLSelectElement;
+    elementToSelect.value = valueToSelect;
   }
 
-  const searchCountriesByRegion = async () => {
-    if (selectRegion === '') {
+  const handleChangeFilterRegion = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const regionSelected = e.target.value;
+    if (regionSelected === '') {
       const myData = await getCountriesListService.execute()
       setCountries(myData)
     } else {
-      const searchRegionCountries = await searchCountriesByRegionService.execute(selectRegion)
+      const searchRegionCountries = await searchCountriesByRegionService.execute(regionSelected)
       setCountries(searchRegionCountries)
       setSearch('')
     }
   }
 
-  const regionSelection = (region: string): void => {
-    setSelectRegion(region);
-  };
+  const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    searchCountries();
+  }
 
   return (
     <>
       <div className='navbar'>
         <h1>Where in the world?</h1>
         <div className='switchTheme'>
-          <FontAwesomeIcon icon={["fas", "moon"]} />
+          <FontAwesomeIcon icon={["fas", "moon"]} className='iconSwitchTheme' />
+          <p>Dark Mode</p>
         </div>
       </div>
 
       <div className='search-and-filter'>
-        <input type="search" value={search} placeholder="Search the country..." onChange={(e) => setSearch(e.target.value)}></input>
-        <button onClick={searchCountries}>Search Country</button>
-
-        <div>
-          {selectRegion
-            ? `You select ${selectRegion} for your search`
-            : 'Search by regions'}
-
-          <button onClick={() => {toggleDropDown(); searchCountriesByRegion()}} onBlur={(e: React.FocusEvent<HTMLButtonElement>): void => dismissHandler(e)}>
-            <div>
-              {selectRegion ? 'Select: ' + selectRegion : 'Select...'}
-            </div>
-            {showDropDown && (
-              <DropDown
-                regions={regions()}
-                showDropDown={false}
-                toggleDropDown={(): void => toggleDropDown()}
-                regionSelection={regionSelection}
-              />
-            )}
-          </button>
+        <div className='box-search'>
+          <form onSubmit={onFormSubmit}>
+            <input type="search" value={search} placeholder="Search the country..." className='input-search' onChange={(e) => setSearch(e.target.value)}></input>
+          </form>
+          <span><FontAwesomeIcon icon={["fas", "search"]} className='icon-search' /></span>
         </div>
 
+        <div className='filter-by-region'>
+          <select name="optionsRegions" id="regionSelected" onChange={handleChangeFilterRegion} className='select-filter-by-region'>
+            <option value="" disabled selected>Filter by region</option>
+            <option value="America">America</option>
+            <option value="Asia">Asia</option>
+            <option value="Africa">Africa</option>
+            <option value="Oceania">Oceania</option>
+            <option value="Antarctic">Antartida</option>
+          </select>
+        </div>
+      </div>
+
+      <div className='container-cards'>
         {countries.map((country, indexCountry) => {
           return (
-            <div key={indexCountry}>
-              <img src={country.flag} alt={country.officialName} />
-              <p>{country.officialName}</p>
+            <div key={indexCountry} className='card-country'>
+              <img src={country.flag} alt={country.officialName} className='card-flag-country' />
+              <div className='card-text-information-country'>
+                <p className='card-name-country'>{country.officialName}</p>
+                <div>
+                  <p className='card-items-information-country'>Population: <span className='card-information-country'>{country.population.toLocaleString()}</span></p>
+                  <p className='card-items-information-country'>Region: <span className='card-information-country'>{country.region}</span></p>
+                  <p className='card-items-information-country'>Capital: <span className='card-information-country'>{country.capital}</span></p>
+                </div>
+              </div>
             </div>
           )
         })
@@ -115,4 +113,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

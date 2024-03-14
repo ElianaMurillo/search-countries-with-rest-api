@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-
-interface DropDownProps {
+/*interface DropDownProps {
   regions: string[];
   showDropDown: boolean;
   regionSelection: Function;
@@ -39,5 +37,4 @@ const DropDown: React.FC<DropDownProps> = ({
     </>
   );
 };
-
-export default DropDown;
+export default DropDown;*/

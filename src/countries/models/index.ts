@@ -10,13 +10,15 @@ export enum Regions {
 export class Country {
   officialName: string
   commonName: string
+  capital: string
   population: number
   region: Regions
   flag: string
 
-  constructor(name: string, commonName: string, population: number, region: Regions, flag: string) {
+  constructor(name: string, commonName: string, capital: string, population: number, region: Regions, flag: string) {
     this.officialName = name
     this.commonName = commonName
+    this.capital = capital
     this.population = population
     this.region = region
     this.flag = flag

@@ -5,6 +5,7 @@ export interface ICountryDTO {
     common: string
     official: string
   },
+  capital: string
   region: string
   population: number
   flags: {
@@ -28,6 +29,7 @@ export class CountryAdapter {
     return new Country(
       countryDto.name.official,
       countryDto.name.common,
+      countryDto.capital,
       countryDto.population,
       regionAdapted,
       countryDto.flags.png
