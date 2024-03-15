@@ -1,53 +1,85 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
+:root {
+  --background: rgba(235, 232, 232, 0.8);
+  --background-secondary: white;
+  --text-primary: black;
+  --text-secondary: royalblue;
+  --accent: purple;
+}
+
+[data-theme='dark'] {
+  --background: #222831;
+  --background-secondary: #31363F;
+  --text-primary: white;
+  --text-secondary: grey;
+  --accent: darkred;
+}
+
 body {
-  background-color: rgba(235, 232, 232, 0.8);font-family: "Nunito Sans", sans-serif;
+  background-color: var(--background);
+  font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
   font-variation-settings:
     "wdth" 100,
     "YTLC" 500;
+    color: var(--text-primary);
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
-  background-color: white;
+  background-color: var(--background-secondary);
   padding: 2% 5%;
+  color: var(--text-primary);
+}
+
+.container-cards {
+  background-color: var(--background);
 }
 
 .navbar h1 {
   font-size: 1.2rem;
-  width: 80%;
   text-align: left;
   font-weight: 800;
+  color: var(--text-primary);
 }
 
-.switchTheme {
+.switch-theme {
   display: flex;
   align-items: center;
-  width: 80%;
   justify-content: flex-end;
+  width: 10%;
 }
 
 .iconSwitchTheme {
   padding: 0 2%;
 }
 
+.btn-switch-theme {
+  all: unset;
+  background-color: var(--background-secondary);
+  width: 100%;
+}
+
 .search-and-filter {
+  background-color: var(--background);
   padding: 2% 5%;
   display: flex;
   justify-content: space-between;
+  color: var(--text-primary);
 }
 
 .input-search {
   width: 300px;
   border-radius: 5px;
-  background-color: #FFF;
+  background-color: var(--background-secondary);
   border: none;
   height: 40px;
   padding: 5% 15%;
+  color: var(--text-primary);
 }
 
 .icon-search {
@@ -59,10 +91,11 @@ body {
 .select-filter-by-region {
   width: 170px;
   border-radius: 5px;
-  background-color: #FFF;
+  background-color: var(--background-secondary);
   border: none;
   height: 40px;
   padding: 5% 15%;
+  color: var(--text-primary);
 }
 
 .container-cards {
@@ -70,11 +103,12 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 23%);
   justify-content: space-between;
+  color: var(--text-primary);
 }
 
 .card-country {
   max-width: 230px;
-  background-color: white;
+  background-color: var(--background-secondary);
   border-radius: 8px;
   margin-bottom: 50px;
 }

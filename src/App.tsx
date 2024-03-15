@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLocalStorage from 'use-local-storage';
 import './reset.css';
 import './App.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +12,18 @@ import { SearchCountriesByNameService } from './countries/services';
 import { SearchCountriesByRegionService } from './countries/services/SearchCountriesByRegion.service';
 
 function App() {
+
+  const defaultLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  const [theme, setTheme] = useLocalStorage('theme', defaultLight ? 'dark' : 'light');
+
+  console.log(theme);
+
+  const switchTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    console.log(theme);
+  }
+
   const [search, setSearch] = React.useState('');
   const [countries, setCountries] = React.useState<Country[]>([]);
 
@@ -62,12 +75,14 @@ function App() {
   }
 
   return (
-    <>
+    <div className='app' data-theme={theme}>
       <div className='navbar'>
         <h1>Where in the world?</h1>
-        <div className='switchTheme'>
-          <FontAwesomeIcon icon={["fas", "moon"]} className='iconSwitchTheme' />
-          <p>Dark Mode</p>
+        <div className='switch-theme'>
+          <button  onClick={switchTheme} className='btn-switch-theme'>
+            <FontAwesomeIcon icon={["fas", "moon"]} className='iconSwitchTheme' />
+            {theme === 'light' ? 'dark' : 'light'} mode
+          </button>
         </div>
       </div>
 
@@ -80,8 +95,8 @@ function App() {
         </div>
 
         <div className='filter-by-region'>
-          <select name="optionsRegions" id="regionSelected" onChange={handleChangeFilterRegion} className='select-filter-by-region'>
-            <option value="" disabled selected>Filter by region</option>
+          <select name="optionsRegions" id="regionSelected" onChange={handleChangeFilterRegion} className='select-filter-by-region' defaultValue={'default'}>
+            <option value="default" disabled>Filter by region</option>
             <option value="America">America</option>
             <option value="Asia">Asia</option>
             <option value="Africa">Africa</option>
@@ -109,7 +124,7 @@ function App() {
         })
         }
       </div>
-    </>
+    </div>
   )
 }
 
